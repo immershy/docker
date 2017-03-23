@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="http://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet">
+    <link href="http://www.bootcss.com/p/layoutit/css/layoutit.css" rel="stylesheet">
+    <link href="http://www.bootcss.com/p/layoutit/css/bootstrap-combined.min.css" rel="stylesheet"/>
+    <!-- HTML5 Shim 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
+    <!-- 注意： 如果通过 file://  引入 Respond.js 文件，则该文件无法起效果 -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+    <![endif]-->
+
+    <!-- jQuery (Bootstrap 的 JavaScript 插件需要引入 jQuery) -->
+    <script src="https://code.jquery.com/jquery.js"></script>
+    <!-- 包括所有已编译的插件 -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+    <!--<script src="/webjars/jquery/jquery.min.js"></script>-->
+    <script src="/webjars/sockjs-client/sockjs.min.js"></script>
+    <script src="/webjars/stomp-websocket/stomp.min.js"></script>
+    <script src="js/auth.js"></script>
+    <link href="css/main.css" rel="stylesheet" type="text/css"/>
+
+    <!-- 树结构 -->
+    <link rel="stylesheet" href="css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <!--<link rel="stylesheet" href="css/zTreeStyle/demo.css" type="text/css">-->
+    <script type="text/javascript" src="js/jquery.ztree.core.js"></script>
+    <script type="text/javascript" src="js/jquery.ztree.excheck.js"></script>
+    <script src="js/tree.js"></script>
+
+    <!--弹出框-->
+    <script type="text/javascript"
+            src="http://www.runoob.com/try/bootstrap/twitter-bootstrap-v2/js/bootstrap-tooltip.js"></script>
+    <script type="text/javascript"
+            src="http://www.runoob.com/try/bootstrap/twitter-bootstrap-v2/js/bootstrap-popover.js"></script>
+
+    <!--镜像列表-->
+    <script src="js/img.js"></script>
+</head>
+<body>
+<div class="container">
+    <div class="row">
+        <div class="col-md-2">
+            <ol>
+                <li id="build">
+                    <button class="btn" page="page1" type="button">镜像编译</button>
+                </li>
+                <li id="imagelist">
+                    <button class="btn" page="page3" type="button">镜像列表</button>
+                </li>
+                <li id="service">
+                    <button class="btn" page="page2" type="button">服务管理</button>
+                </li>
+                <li id="servicelist">
+                    <button class="btn" page="page4" type="button">服务列表</button>
+                </li>
+            </ol>
+        </div>
+        <div class="col-md-4">
+
+
+            <div page="page1">
+                <form class="form-inline">
+                    <fieldset>
+                        <legend>授权登录</legend>
+                        <br>
+                        <button class="btn" type="button" id="gitauth">Gitlab授权</button>
+                        <br>
+                    </fieldset>
+                </form>
+            </div>
+
+
+            <div page="page2">
+                <form class="form-inline">
+                    <fieldset>
+                        <legend>配置信息</legend>
+                        <br>
+                        <div id="project">
+                            <label>项目路径:</label>
+                            <select id="projselect">
+                                <option value="项目选择" selected="selected">项目选择</option>
+                            </select>
+                        </div>
+                    </fieldset>
+                </form>
+
+                <form class="form-inline">
+                    <fieldset>
+                        <br>
+                        <div id="branch">
+                            <label>分支选择:</label>
+                            <select id="branchselect">
+                                <option value="分支选择" selected="selected">分支选择</option>
+                            </select>
+                        </div>
+
+                    </fieldset>
+                </form>
+
+                <form class="form-inline">
+                    <fieldset>
+                        <br/>
+                        <div id="cmd">
+                            <label>前置命令:</label>
+                            <input type="text" placeholder="mvn clean install -DskipTests" name="cmd">
+                        </div>
+                    </fieldset>
+                </form>
+
+
+                <form class="form-inline">
+                    <fieldset>
+                        <br/>
+                        <div id="imgname">
+                            <label>镜像名称:</label>
+                            <input type="text" name="imgname">
+                        </div>
+                    </fieldset>
+                </form>
+
+                <form class="form-inline">
+                    <fieldset>
+                        <br/>
+                        <div id="dir">
+                            <!--<div class="content_wrap">-->
+                            <label>Docker文件目录:</label>
+                            <input id="selectedFile" type="text" value="">
+                            <label popup="true" id="selectdockfile">选择</label>
+                        </div>
+                    </fieldset>
+                </form>
+
+                <form class="form-inline">
+                    <fieldset>
+                        <br/>
+                        <input id="submit" type="button" value="提交"/>
+                        <input id="logclear" type="button" value="日志清空"/>
+                    </fieldset>
+                </form>
+
+            </div>
+
+
+            <div page="page3">
+                <legend>镜像列表:</legend>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>
+                            编号
+                        </th>
+                        <th>
+                            名称
+                        </th>
+                        <th>
+                            部署
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="imgtable">
+
+                    </tbody>
+                </table>
+            </div>
+
+
+            <div page="page4">
+                <legend>服务列表:</legend>
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th>
+                            编号
+                        </th>
+                        <th>
+                            名称
+                        </th>
+                        <th>
+                            详情
+                        </th>
+                        <th>
+                            管理
+                        </th>
+                    </tr>
+                    </thead>
+                    <tbody id="servicetable">
+
+                    </tbody>
+                </table>
+
+
+            </div>
+
+        </div>
+
+        <div class="col-md-6">
+            <div page="page2">
+                <legend>日志输出</legend>
+                <textarea name="screen" id="screen" class="textarea" style="width: 100%">
+                </textarea>
+            </div>
+
+            <div page="page3">
+
+                <legend>服务配置:</legend>
+
+                <fieldset>
+                    <br/>
+                    <div>
+                        <label>应用名称:</label>
+                        <input type="text" name="appname" id="appname">
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <br/>
+                    <div>
+                        <label>镜&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;像:</label>
+                        <input type="text" name="img" id="img">
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <br/>
+                    <div>
+                        <label>命名空间:</label>
+                        <input type="text" name="namespace" id="namespace" placeholder="default">
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <br/>
+                    <div>
+                        <label>Pod数量:</label>
+                        <input type="text" name="podnum" id="podnum" placeholder="1">
+                    </div>
+                </fieldset>
+
+
+                <fieldset>
+                    <br/>
+                    <div>
+                        <label>容器端口:</label>
+                        <input type="text" name="containerPort" id="containerPort">
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <br/>
+                    <div>
+                        <label>对外端口:</label>
+                        <input type="text" name="nodePort" id="nodePort">
+                    </div>
+                </fieldset>
+
+                <fieldset>
+                    <br/>
+                    <div>
+                        <input type="button" name="deploy" id="deploy" value="提交">
+                    </div>
+                </fieldset>
+
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div id="menuContent" class="menuContent" style="display:none; position: absolute;">
+    <ul id="treeDemo" class="ztree" style="margin-top:0; width:180px; height: 300px;"></ul>
+</div>
+
+
+</body>
+</html>
